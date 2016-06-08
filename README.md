@@ -1,7 +1,7 @@
 # Test-ActiveDirectory
 Test and auditing Powershell and Pester scripts for Active Directory.
 
-This code builds on the Active Directory Operational Test work of Irwin Strachan @IrwinStrachan which he has detailed here:
+This code builds on the Active Directory Operational Test work of Irwin Strachan [(@IrwinStrachan)](https://twitter.com/IrwinStrachan) which he has detailed here:
 https://pshirwin.wordpress.com/2016/04/08/active-directory-operations-test/
 
 ## Usage
