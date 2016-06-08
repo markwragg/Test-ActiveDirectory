@@ -25,8 +25,9 @@ Execute with Pester (invoke-pester) to perform the following tests:
 
 ## Requires
 
-Powershell 4+ (probably).
-Pester
+- Powershell 4+ (probably).
+- Pester
+- Connectivity to AD and suitable rights
 
 ## Pre-requisities
 
