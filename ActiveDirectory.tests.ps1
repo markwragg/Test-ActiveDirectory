@@ -1,7 +1,7 @@
 ﻿[CmdletBinding()]
 Param(
     [string]$ADFile,
-    [string]$ADGoldFile = $(Get-ChildItem ("ADGoldConfig-*.xml") | Select name -last 1).name
+    [string]$ADGoldFile = $(Get-ChildItem ('ADGoldConfig-*.xml') | Select-Object name -last 1).name
 )
 
 #Try to load the Active Directory configuration files for comparison
@@ -11,19 +11,20 @@ Try{
         $ADSnapshot = Import-Clixml $ADFile
     }
     Else{
-        Write-Verbose "No AD Snapshot file specified. Attempting to get config via Get-ADConfig.ps1."
+        Write-Verbose 'No AD Snapshot file specified. Attempting to get config via Get-ADConfig.ps1.'
         $ADSnapshot = Invoke-Expression ".\Get-ADConfig.ps1 -ExportToXML:$False"
     }
 
     Write-Verbose "Loading the AD Gold Config from: $ADGoldFile"
     $ADGoldConfig = Import-Clixml $ADGoldFile
-}Catch{
+}
+Catch{
     Write-Error "Could not load the Active Directory 'Gold' configuration or load/generate a current snapshot."
     Exit
 }
 
 #Begin testing
-Describe 'Active Directory configuration checks' {
+Describe 'Active Directory Forest Operational Readiness checks' -Tags 'Forest' {
 
     Context 'Verifying Forest Configuration'{
         it "Forest FQDN $($ADGoldConfig.ForestInformation.RootDomain)" {
@@ -45,7 +46,9 @@ Describe 'Active Directory configuration checks' {
             }
         }
     }
+}
 
+Describe 'Active Directory Domain Operational Readiness checks' -Tags 'Domain' {
     Context 'Verifying Domain Configuration'{
         it "Total Domain Controllers $($ADGoldConfig.DomainControllers.Count)" {
             $ADGoldConfig.DomainControllers.Count | 
@@ -88,7 +91,9 @@ Describe 'Active Directory configuration checks' {
             Should be $ADSnapshot.DomainInformation.InfrastructureMaster
         }
     }
+}
 
+Describe 'Active Directory Default Password Policy Operational Readiness checks' -Tags 'Password' {
     Context 'Verifying Default Password Policy'{
         it 'ComplexityEnabled'{
             $ADGoldConfig.DefaultPassWordPoLicy.ComplexityEnabled | 
@@ -119,7 +124,9 @@ Describe 'Active Directory configuration checks' {
             Should be $ADSnapshot.DefaultPassWordPoLicy.MaxPasswordAge.ToString()
         }
     }
+}
 
+Describe 'Active Directory Sites,subnets & sublinks Operational Readiness' -Tags 'Sites','Subnets','Sitelinks' {
     Context 'Verifying Active Directory Sites'{
         $ADGoldConfig.Sites.Name | 
         ForEach-Object{
@@ -165,36 +172,35 @@ Describe 'Active Directory configuration checks' {
     }
 }
 
-
-Describe 'Active Directory health checks' {
+Describe 'Active Directory health checks' -Tags 'ADHC' {
     
     Context 'Checking the output of NLTest /Query'{
         $NLTest = NLTest.exe /Query
         
-        it "NLTest.exe /Query Result" {
-            ($NLTest | out-string).contains("Success") | Should be $true   
+        it 'NLTest.exe /Query Result' {
+            ($NLTest | out-string).contains('Success') | Should be $true   
         }     
     }    
 
     Context 'Checking the output of DCDiag for issues on all DCs'{
         $DCDiag = dcdiag.exe -a
         
-        it "DCDiag.exe -a Result" {
-            ($DCDiag | out-string).contains("failed") | Should be $false   
+        it 'DCDiag.exe -a Result' {
+            ($DCDiag | out-string).contains('failed') | Should be $false   
         }     
     }
     
     Context 'Checking the output of RepAdmin /showrepl for replication issues'{
-        (Repadmin.exe /showrepl * /csv | convertfrom-csv) | Sort "Source DSA" | ?{$_."Number of Failures" -ge 0} |
+        (Repadmin.exe /showrepl * /csv | convertfrom-csv) | Sort-Object 'Source DSA' | Where-Object{$_.'Number of Failures' -ge 0} |
         ForEach-Object{ 
-            it "Replication from $($_."Source DSA") to $($_."Destination DSA") has $($_."Number of Failures") failures" {
-                $_."Number of Failures" | Should Not BeGreaterThan 0  
+            it "Replication from $($_.'Source DSA') to $($_.'Destination DSA') has $($_.'Number of Failures') failures" {
+                $_.'Number of Failures' | Should Not BeGreaterThan 0  
             } 
         }     
     }     
     
     Context 'Pinging each Domain Controller'{
-        $ADGoldConfig.DomainControllers.Name | Sort |
+        $ADGoldConfig.DomainControllers.Name | Sort-Object |
         ForEach-Object{
             it "Ping result for Domain Controller $($_)"{
                 Test-Connection $_ -Quiet | Should be $true
@@ -215,14 +221,14 @@ Describe 'Active Directory health checks' {
     }
 
     Context 'Checking local Active Directory Windows services are running'{
-        $Services = @("ADWS","BITS","CertPropSvc","CryptSvc","Dfs","DFSR","DNS","Dnscache","eventlog","gpsvc","kdc",`
-                      "LanmanServer","LanmanWorkstation","Netlogon","NTDS","NtFrs","RpcEptMapper","RpcSs","SamSs",`
-                      "W32Time")
+        $Services = @('ADWS','BITS','CertPropSvc','CryptSvc','Dfs','DFSR','DNS','Dnscache','eventlog','gpsvc','kdc',`
+                      'LanmanServer','LanmanWorkstation','Netlogon','NTDS','NtFrs','RpcEptMapper','RpcSs','SamSs',`
+                      'W32Time')
 
         $Services | foreach-object{
             $Svc = get-service $_
             it "Service: $($Svc.DisplayName)" {
-                $Svc.status | Should be "Running"
+                $Svc.status | Should be 'Running'
             }
         }
     }
