@@ -233,4 +233,32 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
         }
     }
 
+    Context 'checking DNS LDAP SRV records'{
+        $i = 0
+        foreach ($entry in $ADGoldConfig.LDAPDNS){
+                it "LDAP result entry $i`: $($entry.Type)" {
+                    $entry.Name | Should be ($ADSnapshot.LDAPDNS[$i]).Name
+                    $entry.NameTarget | Should be ($ADSnapshot.LDAPDNS[$i]).NameTarget
+                    $entry.TTL | Should be ($ADSnapshot.LDAPDNS[$i]).TTL
+                    $entry.Port | Should be ($ADSnapshot.LDAPDNS[$i]).Port
+                    $entry.IPAddress | Should be ($ADSnapshot.LDAPDNS[$i]).IPAddress
+                }
+                $i++
+            }
+    }
+
+    Context 'checking DNS Kerberos SRV records'{
+        $i = 0
+        foreach ($entry in $ADGoldConfig.KerberosDNS){
+                it "LDAP result entry $i`: $($entry.Type)" {
+                    $entry.Name | Should be ($ADSnapshot.KerberosDNS[$i]).Name
+                    $entry.NameTarget | Should be ($ADSnapshot.KerberosDNS[$i]).NameTarget
+                    $entry.TTL | Should be ($ADSnapshot.KerberosDNS[$i]).TTL
+                    $entry.Port | Should be ($ADSnapshot.KerberosDNS[$i]).Port
+                    $entry.IPAddress | Should be ($ADSnapshot.KerberosDNS[$i]).IPAddress
+                }
+                $i++
+            }
+
+    }
 }

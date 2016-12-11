@@ -22,6 +22,7 @@ Execute with Pester (invoke-pester) to perform the following tests:
 - Performs a Ping against each listed DC (per config)
 - Tests that common AD ports respond locally: (53,88,135,139,389,445,464,636,3268,3269,9389)
 - Checks that common AD services are running: ("ADWS","BITS","CertPropSvc","CryptSvc","Dfs","DFSR","DNS","Dnscache","eventlog","gpsvc","kdc","LanmanServer","LanmanWorkstation","Netlogon","NTDS","NtFrs","RpcEptMapper","RpcSs","SamSs","W32Time")
+- Checks the SRV DNS records for _ldap.tcp.domainname and _kerberos.tcp.domainname
 
 ## Requires
 
