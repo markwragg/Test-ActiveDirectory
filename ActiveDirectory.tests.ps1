@@ -1,7 +1,7 @@
 ﻿[CmdletBinding()]
 Param(
     [string]$ADFile,
-    [string]$ADGoldFile = $(Get-ChildItem ('ADGold*-*.xml') | Select-Object name -last 1).name
+    [string]$ADGoldFile = $(Get-ChildItem ('ADGoldConfig-*.xml') | Select-Object name -last 1).name
 )
 
 #Try to load the Active Directory configuration files for comparison
