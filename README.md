@@ -1,4 +1,7 @@
 # Test-ActiveDirectory
+
+![Test Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen.svg?maxAge=60) 
+
 Test and auditing Powershell and Pester scripts for Active Directory.
 
 This code builds on the Active Directory Operational Test work of Irwin Strachan [(@IrwinStrachan)](https://twitter.com/IrwinStrachan) which he has detailed here:
