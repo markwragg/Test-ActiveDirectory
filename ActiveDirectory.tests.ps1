@@ -1,7 +1,10 @@
 ﻿[CmdletBinding()]
 Param(
+    # Optional: Use to specify a snapshot of AD config that you want to test the Gold config against. If not provided then the current config is gathered via the Get-ADConfig cmdlet automatically.
     [string]$ADFile,
-    [string]$ADGoldFile = $(Get-ChildItem ('ADGoldConfig-*.xml') | Select-Object name -last 1).name
+
+    # The path to the gold configuration file, used to validate against. By Default selects the first file named ADGoldConfig-*.xml in the current directory.
+    [string]$ADGoldFile = $(Get-ChildItem ('.\ADGoldConfig-*.xml') | Select-Object name -last 1).name
 )
 
 #Try to load the Active Directory configuration files for comparison
@@ -20,7 +23,7 @@ Try{
 }
 Catch{
     Write-Error "Could not load the Active Directory 'Gold' configuration or load/generate a current snapshot."
-    Exit
+    Throw $_
 }
 
 #Begin testing
@@ -221,8 +224,8 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
     }
 
     Context 'Checking local Active Directory Windows services are running'{
-        $Services = @('ADWS','BITS','CertPropSvc','CryptSvc','Dfs','DFSR','DNS','Dnscache','eventlog','gpsvc','kdc',`
-                      'LanmanServer','LanmanWorkstation','Netlogon','NTDS','NtFrs','RpcEptMapper','RpcSs','SamSs',`
+        $Services = @('ADWS','BITS','CertPropSvc','CryptSvc','Dfs','DFSR','DNS','Dnscache','eventlog','gpsvc','kdc',
+                      'LanmanServer','LanmanWorkstation','Netlogon','NTDS','NtFrs','RpcEptMapper','RpcSs','SamSs',
                       'W32Time')
 
         $Services | foreach-object{
@@ -235,30 +238,29 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
 
     Context 'checking DNS LDAP SRV records'{
         $i = 0
-        foreach ($entry in $ADGoldConfig.LDAPDNS){
-                it "LDAP result entry $i`: $($entry.Type)" {
-                    $entry.Name | Should be ($ADSnapshot.LDAPDNS[$i]).Name
-                    $entry.NameTarget | Should be ($ADSnapshot.LDAPDNS[$i]).NameTarget
-                    $entry.TTL | Should be ($ADSnapshot.LDAPDNS[$i]).TTL
-                    $entry.Port | Should be ($ADSnapshot.LDAPDNS[$i]).Port
-                    $entry.IPAddress | Should be ($ADSnapshot.LDAPDNS[$i]).IPAddress
-                }
-                $i++
+        foreach ($entry in ($ADGoldConfig.LDAPDNS | Sort-Object nametarget,name,type)){
+            it "LDAP result entry $i`: $($entry.Type)" {
+                $entry.Name | Should be ($ADSnapshot.LDAPDNS[$i]).Name
+                $entry.NameTarget | Should be ($ADSnapshot.LDAPDNS[$i]).NameTarget
+                $entry.TTL | Should be ($ADSnapshot.LDAPDNS[$i]).TTL
+                $entry.Port | Should be ($ADSnapshot.LDAPDNS[$i]).Port
+                $entry.IPAddress | Should be ($ADSnapshot.LDAPDNS[$i]).IPAddress
             }
+            $i++
+        }
     }
 
     Context 'checking DNS Kerberos SRV records'{
         $i = 0
-        foreach ($entry in $ADGoldConfig.KerberosDNS){
-                it "LDAP result entry $i`: $($entry.Type)" {
-                    $entry.Name | Should be ($ADSnapshot.KerberosDNS[$i]).Name
-                    $entry.NameTarget | Should be ($ADSnapshot.KerberosDNS[$i]).NameTarget
-                    $entry.TTL | Should be ($ADSnapshot.KerberosDNS[$i]).TTL
-                    $entry.Port | Should be ($ADSnapshot.KerberosDNS[$i]).Port
-                    $entry.IPAddress | Should be ($ADSnapshot.KerberosDNS[$i]).IPAddress
-                }
-                $i++
+        foreach ($entry in ($ADGoldConfig.KerberosDNS | Sort-Object nametarget,name,type)){
+            it "LDAP result entry $i`: $($entry.Type)" {
+                $entry.Name | Should be ($ADSnapshot.KerberosDNS[$i]).Name
+                $entry.NameTarget | Should be ($ADSnapshot.KerberosDNS[$i]).NameTarget
+                $entry.TTL | Should be ($ADSnapshot.KerberosDNS[$i]).TTL
+                $entry.Port | Should be ($ADSnapshot.KerberosDNS[$i]).Port
+                $entry.IPAddress | Should be ($ADSnapshot.KerberosDNS[$i]).IPAddress
             }
-
+            $i++
+        }
     }
 }

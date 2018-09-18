@@ -24,8 +24,8 @@ $ADSnapshot.OptionalFeatures =  $(Get-ADOptionalFeature -Filter *)
 $ADSnapshot.Sites = $(Get-ADReplicationSite -Filter *)
 $ADSnapshot.Subnets = $(Get-ADReplicationSubnet -Filter *)
 $ADSnapshot.SiteLinks = $(Get-ADReplicationSiteLink -Filter *)
-$ADSnapshot.LDAPDNS = $(Resolve-DnsName -Name "_ldap._tcp.$((Get-ADDomain).DNSRoot)" -Type srv)
-$ADSnapshot.KerberosDNS = $(Resolve-DnsName -Name "_kerberos._tcp.$((Get-ADDomain).DNSRoot)" -Type srv)
+$ADSnapshot.LDAPDNS = $(Resolve-DnsName -Name "_ldap._tcp.$((Get-ADDomain).DNSRoot)" -Type srv) | Sort-Object nametarget,name,type
+$ADSnapshot.KerberosDNS = $(Resolve-DnsName -Name "_kerberos._tcp.$((Get-ADDomain).DNSRoot)" -Type srv) | Sort-Object nametarget,name,type
 
 #Export to XML
 If ($ExportToXML -eq $True) {
