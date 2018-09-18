@@ -95,7 +95,7 @@ PrivateData = @{
     PSData = @{
 
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = 'Active Directory','AD','Testing','Pester'
+        Tags = 'ActiveDirectory','AD','Testing','Pester'
 
         # A URL to the license for this module.
         # LicenseUri = ''
