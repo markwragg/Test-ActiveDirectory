@@ -4,7 +4,7 @@
 
 This project contains a PowerShell module named ADAudit with cmdlets for retrieving and exporting detailed information about the configuration of an Active Directory forest. The module also contains a set of Pester tests that can be used to validate whether any configuration drift has occurred as well as perform a series of health tests of AD.
 
-The validation of AD configuration drifts by you initially using `Get-ADConfig | Export-ADConfig -AsGoldConfig` to generate a current "known-good state" snapshot of the configuration of AD. After this you can use `Test-ActiveDirectory`, or run the `ActiveDirectory.tests.ps1` file directly to compare the known good state to the current AD state (or a previously retrieved snapshot of the state).
+The validation of AD configuration drifts works by you initially using `Get-ADConfig | Export-ADConfig -AsGoldConfig` to generate a current "known-good state" snapshot of the configuration of AD. After this you can use `Test-ActiveDirectory`, or run the `ActiveDirectory.tests.ps1` file directly to compare the known good state to the current AD state (or a previously retrieved snapshot of the state).
 
 > This code builds on the Active Directory Operational Test work of Irwin Strachan [(@IrwinStrachan)](https://twitter.com/IrwinStrachan) which he has detailed here:
 >
