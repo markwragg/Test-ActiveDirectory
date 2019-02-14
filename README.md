@@ -1,6 +1,6 @@
 # Test-ActiveDirectory
 
-[![Build status](https://ci.appveyor.com/api/projects/status/nq1lqjp6ibbc52uy?svg=true)](https://ci.appveyor.com/project/markwragg/test-activedirectory) ![Test Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen.svg?maxAge=60) 
+[![Build status](https://ci.appveyor.com/api/projects/status/nq1lqjp6ibbc52uy?svg=true)](https://ci.appveyor.com/project/markwragg/test-activedirectory) ![Test Coverage](https://img.shields.io/badge/coverage-91%25-brightgreen.svg?maxAge=60) 
 
 This project contains a PowerShell module named ADAudit with cmdlets for retrieving and exporting detailed information about the configuration of an Active Directory forest. The module also contains a set of Pester tests that can be used to validate whether any configuration drift has occurred as well as perform a series of health tests of AD.
 
