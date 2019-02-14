@@ -26,6 +26,7 @@
         [string]
         $ADGoldFile = (Get-ChildItem (Join-Path $Pwd 'GoldConfig-*.xml') | Select-Object -Last 1).fullname
     )
+    Write-Host $PSScriptRoot
 
-    ./$PSScriptRoot/../ActiveDirectory.tests.ps1 -ADSnapShotFile $ADSnapshotFile -ADGoldFile $ADGoldFile
+    & $PSScriptRoot/../ActiveDirectory.tests.ps1 -ADSnapShotFile $ADSnapshotFile -ADGoldFile $ADGoldFile
 }
