@@ -22,7 +22,7 @@ Install-Module ADAudit -Scope CurrentUser
 This module requires the following modules be installed/available:
 
 - ActiveDirectory
-- Pester
+- Pester (minimum version 5.0)
 
 ## Cmdlets
 

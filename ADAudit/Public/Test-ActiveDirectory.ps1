@@ -58,6 +58,15 @@ Function Test-ActiveDirectory {
     $PesterConfig.Run.Container = $Container
     $PesterConfig.Run.PassThru = $true
 
+    # Pester v6 fails a -ForEach that resolves to $null/empty unless the It also carries
+    # -AllowNullOrEmptyForEach. ActiveDirectory.Checks.ps1 deliberately doesn't use that switch, so it
+    # can also run unmodified on Pester v5 (where the switch doesn't exist). Relaxing the same behaviour
+    # here, at the run configuration level, covers Pester v6 instead -- guarded, since this property
+    # doesn't exist on Pester v5's configuration object and setting it there would throw.
+    if ($PesterConfig.Run.PSObject.Properties.Name -contains 'FailOnNullOrEmptyForEach') {
+        $PesterConfig.Run.FailOnNullOrEmptyForEach = $false
+    }
+
     if ($Tag) { $PesterConfig.Filter.Tag = $Tag }
     if ($ExcludeTag) { $PesterConfig.Filter.ExcludeTag = $ExcludeTag }
 

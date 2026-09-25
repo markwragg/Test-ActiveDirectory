@@ -12,7 +12,7 @@
 RootModule = 'ADAudit.psm1'
 
 # Version number of this module.
-ModuleVersion = '2.0.10'
+ModuleVersion = '3.0.0'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
@@ -51,7 +51,9 @@ Description = 'A PowerShell module/set of Pester Tests for recording and testing
 # ProcessorArchitecture = ''
 
 # Modules that must be imported into the global environment prior to importing this module
-# RequiredModules = @()
+RequiredModules = @(
+    @{ ModuleName = 'Pester'; ModuleVersion = '5.0.0' }
+)
 
 # Assemblies that must be loaded prior to importing this module
 # RequiredAssemblies = @()

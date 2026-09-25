@@ -78,7 +78,7 @@ Describe 'Active Directory Forest Operational Readiness checks' -Tags 'Forest' {
     }
 
     Context 'Verifying GlobalCatalogs' {
-        It "Server <_> is a GlobalCatalog" -ForEach $ADGoldConfig.ForestInformation.GlobalCatalogs -AllowNullOrEmptyForEach {
+        It "Server <_> is a GlobalCatalog" -ForEach $ADGoldConfig.ForestInformation.GlobalCatalogs {
             $ADSnapshot.ForestInformation.GlobalCatalogs.Contains($_) |
                 Should -Be $true
         }
@@ -92,7 +92,7 @@ Describe 'Active Directory Domain Operational Readiness checks' -Tags 'Domain' {
                 Should -Be $ADSnapshot.DomainControllers.Count
         }
 
-        It "DomainController <_> exists" -ForEach $ADGoldConfig.DomainControllers.Name -AllowNullOrEmptyForEach {
+        It "DomainController <_> exists" -ForEach $ADGoldConfig.DomainControllers.Name {
             $ADSnapshot.DomainControllers.Name.Contains($_) |
                 Should -Be $true
         }
@@ -163,33 +163,33 @@ Describe 'Active Directory Default Password Policy Operational Readiness checks'
 
 Describe 'Active Directory Sites,subnets & sublinks Operational Readiness' -Tags 'Sites', 'Subnets', 'Sitelinks' {
     Context 'Verifying Active Directory Sites' {
-        It "Site <_>" -ForEach $ADGoldConfig.Sites.Name -AllowNullOrEmptyForEach {
+        It "Site <_>" -ForEach $ADGoldConfig.Sites.Name {
             $ADSnapshot.Sites.Name.Contains($_) |
                 Should -Be $true
         }
     }
 
     Context 'Verifying Active Directory Sitelinks' {
-        It "Sitelink <_.Name>" -ForEach $ADGoldConfig.Sitelinks -AllowNullOrEmptyForEach {
+        It "Sitelink <_.Name>" -ForEach $ADGoldConfig.Sitelinks {
             $_.Name |
                 Should -Be ($ADSnapshot.Sitelinks | Where-Object Name -EQ $_.Name).Name
         }
-        It "Sitelink <_.Name> costs <_.Cost>" -ForEach $ADGoldConfig.Sitelinks -AllowNullOrEmptyForEach {
+        It "Sitelink <_.Name> costs <_.Cost>" -ForEach $ADGoldConfig.Sitelinks {
             $_.Cost |
                 Should -Be ($ADSnapshot.Sitelinks | Where-Object Name -EQ $_.Name).Cost
         }
-        It "Sitelink <_.Name> replication interval <_.ReplicationFrequencyInMinutes>" -ForEach $ADGoldConfig.Sitelinks -AllowNullOrEmptyForEach {
+        It "Sitelink <_.Name> replication interval <_.ReplicationFrequencyInMinutes>" -ForEach $ADGoldConfig.Sitelinks {
             $_.ReplicationFrequencyInMinutes |
                 Should -Be ($ADSnapshot.Sitelinks | Where-Object Name -EQ $_.Name).ReplicationFrequencyInMinutes
         }
     }
 
     Context 'Verifying Active Directory Subnets' {
-        It "Subnet <_.Name>" -ForEach $ADGoldConfig.Subnets -AllowNullOrEmptyForEach {
+        It "Subnet <_.Name>" -ForEach $ADGoldConfig.Subnets {
             $_.Name |
                 Should -Be ($ADSnapshot.SubNets | Where-Object Name -EQ $_.Name).Name
         }
-        It "Site <_.Site>" -ForEach $ADGoldConfig.Subnets -AllowNullOrEmptyForEach {
+        It "Site <_.Site>" -ForEach $ADGoldConfig.Subnets {
             $_.Site |
                 Should -Be ($ADSnapshot.SubNets | Where-Object Name -EQ $_.Name).Site
         }
@@ -240,13 +240,13 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
             Write-Verbose "Repadmin.exe could not be run on this host: $_"
         }
 
-        It "Replication from <_.'Source DSA'> to <_.'Destination DSA'> has <_.'Number of Failures'> failures" -ForEach $RepAdminResults -AllowNullOrEmptyForEach {
+        It "Replication from <_.'Source DSA'> to <_.'Destination DSA'> has <_.'Number of Failures'> failures" -ForEach $RepAdminResults {
             $_.'Number of Failures' | Should -Not -BeGreaterThan 0
         }
     }
 
     Context 'Pinging each Domain Controller' {
-        It "Ping result for Domain Controller <_>" -ForEach ($ADGoldConfig.DomainControllers.Name | Sort-Object) -AllowNullOrEmptyForEach {
+        It "Ping result for Domain Controller <_>" -ForEach ($ADGoldConfig.DomainControllers.Name | Sort-Object) {
             Test-Connection $_ -Quiet | Should -Be $true
         }
     }
@@ -272,7 +272,7 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
                 [pscustomobject]@{ Index = $i; Entry = $_ }
                 $i++
             }
-        ) -AllowNullOrEmptyForEach {
+        ) {
             $Snapshot = $ADSnapshot.LDAPDNS[$_.Index]
             $_.Entry.Name | Should -Be $Snapshot.Name
             $_.Entry.NameTarget | Should -Be $Snapshot.NameTarget
@@ -289,7 +289,7 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
                 [pscustomobject]@{ Index = $i; Entry = $_ }
                 $i++
             }
-        ) -AllowNullOrEmptyForEach {
+        ) {
             $Snapshot = $ADSnapshot.KerberosDNS[$_.Index]
             $_.Entry.Name | Should -Be $Snapshot.Name
             $_.Entry.NameTarget | Should -Be $Snapshot.NameTarget

@@ -1,5 +1,18 @@
 # Changelog
 
+## !Deploy
+- **[Breaking]** Renamed `ActiveDirectory.tests.ps1` to `ActiveDirectory.Checks.ps1` so it's no longer
+  auto-discovered as a unit test by Pester. Update any script/automation that referenced the old filename
+  directly.
+- Added `-Tag` / `-ExcludeTag` parameters to `Test-ActiveDirectory`, e.g. `-ExcludeTag ADHC` to skip the
+  live health checks and compare configuration only.
+- Hardened the Active Directory health checks so a missing tool (NLTest/DCDiag/RepAdmin) no longer aborts
+  the whole check run.
+- Migrated the module's Pester test suite to Pester 6, while keeping `ActiveDirectory.Checks.ps1` itself
+  compatible with Pester 5.
+- Replaced the AppVeyor/psake build pipeline with a new Azure Pipelines build, which now fails the build
+  when tests fail.
+
 ## [2.0.10] - 2020-02-25
 - Added a CONTRIBUTING guide for the project.
 
