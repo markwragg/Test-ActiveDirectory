@@ -1,0 +1,5 @@
+coverage.xml
+TestResults_*.xml
+BuildOutput/
+Staging/
+Artifacts/

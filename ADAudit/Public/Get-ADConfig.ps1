@@ -13,6 +13,8 @@
 
         .EXAMPLE
             Get-ADConfig
+
+            Retrieves the current configuration of Active Directory and returns it as a PowerShell object.
     #>
     [cmdletbinding()]
     Param()

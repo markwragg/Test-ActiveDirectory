@@ -17,6 +17,9 @@
 
         .EXAMPLE
             Test-ActiveDirectory
+
+            Compares the current Active Directory configuration against the most recent GoldConfig-*.xml
+            file found in the current directory and reports any differences.
     #>
     [CmdletBinding()]
     Param(
@@ -26,7 +29,13 @@
         [string]
         $ADGoldFile = (Get-ChildItem (Join-Path $Pwd 'GoldConfig-*.xml') | Select-Object -Last 1).fullname
     )
-    Write-Host $PSScriptRoot
+    $Container = New-PesterContainer -Path (Join-Path $PSScriptRoot '../ActiveDirectory.tests.ps1') -Data @{
+        ADSnapshotFile = $ADSnapshotFile
+        ADGoldFile     = $ADGoldFile
+    }
 
-    & $PSScriptRoot/../ActiveDirectory.tests.ps1 -ADSnapShotFile $ADSnapshotFile -ADGoldFile $ADGoldFile
+    $PesterConfig = New-PesterConfiguration
+    $PesterConfig.Run.Container = $Container
+
+    Invoke-Pester -Configuration $PesterConfig
 }

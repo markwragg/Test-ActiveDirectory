@@ -22,11 +22,17 @@
         .EXAMPLE
             Export-ADConfig
 
+            Retrieves the current AD configuration and exports it to a file named ADReport-<date>.xml.
+
         .EXAMPLE
-            Export-ADConfig - AsGoldConfig
+            Export-ADConfig -AsGoldConfig
+
+            Retrieves the current AD configuration and exports it to a file named GoldConfig-<date>.xml.
 
         .EXAMPLE
             Get-ADConfig | Export-ADConfig -AsGoldConfig
+
+            Exports a previously retrieved AD configuration to a file named GoldConfig-<date>.xml.
     #>
     [cmdletbinding(DefaultParameterSetName='Default')]
     Param(
