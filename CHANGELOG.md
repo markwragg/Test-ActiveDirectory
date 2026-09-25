@@ -1,6 +1,6 @@
 # Changelog
 
-## !Deploy
+## [4.0.0] - 2026-09-25
 - **[Breaking]** Renamed `ActiveDirectory.tests.ps1` to `ActiveDirectory.Checks.ps1` so it's no longer
   auto-discovered as a unit test by Pester. Update any script/automation that referenced the old filename
   directly.
