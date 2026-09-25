@@ -460,6 +460,12 @@ Task 'Commit' -Depends 'Init' {
     git add Documentation/*.md
     git add README.md
     git add CHANGELOG.md
+
+    # Commit back the manifest with the version bumped by the Deploy task -- without this, the source
+    # ADAudit.psd1 in the repo stays on the old version while CHANGELOG.md moves on, and the next build's
+    # 'Has matching changelog and manifest versions' Pester test (Tests/Common/Manifest.Tests.ps1) fails.
+    git add $env:BHPSModuleManifest
+
     git commit -m "[skip ci] AzureDevOps Build $($env:BUILD_BUILDID)"
     git push origin HEAD:$env:BUILD_SOURCEBRANCHNAME
 }
