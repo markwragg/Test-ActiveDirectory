@@ -7,10 +7,10 @@ trigger:
   # What branches will trigger a build?
   branches:
     include:
-      # Any Pull Request merging into the main branch
-      - main
+      # Any Pull Request merging into the master branch
+      - master
 
-# Also build Pull Requests targeting main, so tests/analysis run before merge.
+# Also build Pull Requests targeting master, so tests/analysis run before merge.
 # Steps that publish (wiki, gallery, commit-back) live only in the Build stage,
 # which is individually conditioned to skip when Build.Reason is 'PullRequest',
 # so a PR build only validates the change - it never pushes to the wiki, the
@@ -18,7 +18,7 @@ trigger:
 pr:
   branches:
     include:
-      - main
+      - master
 
 stages:
   - stage: Test
