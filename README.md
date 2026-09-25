@@ -49,3 +49,5 @@ Execute to perform the following tests:
 - Tests that common AD ports respond locally: (53,88,135,139,389,445,464,636,3268,3269,9389)
 - Checks that common AD services are running: ("ADWS","BITS","CertPropSvc","CryptSvc","Dfs","DFSR","DNS","Dnscache","eventlog","gpsvc","kdc","LanmanServer","LanmanWorkstation","Netlogon","NTDS","NtFrs","RpcEptMapper","RpcSs","SamSs","W32Time")
 - Checks the SRV DNS records for _ldap.tcp.domainname and _kerberos.tcp.domainname
+
+Use `-Tag` or `-ExcludeTag` to run a subset of the above, e.g. `Test-ActiveDirectory -ExcludeTag ADHC` to compare configuration only and skip the live health checks (useful on a host that isn't AD-connected, or doesn't have the AD administrative tools installed).

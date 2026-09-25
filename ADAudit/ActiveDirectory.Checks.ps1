@@ -200,28 +200,47 @@ Describe 'Active Directory health checks' -Tags 'ADHC' {
 
     Context 'Checking the output of NLTest /Query' {
         BeforeAll {
-            $NLTest = NLTest.exe /Query
+            Try {
+                $NLTest = NLTest.exe /Query 2>&1 | Out-String
+            }
+            Catch {
+                $NLTest = "NLTest.exe could not be run on this host: $_"
+            }
         }
 
         it 'NLTest.exe /Query Result' {
-            ($NLTest | Out-String).Contains('Success') | Should -Be $true
+            $NLTest.Contains('Success') | Should -Be $true
         }
     }
 
     Context 'Checking the output of DCDiag for issues on all DCs' {
         BeforeAll {
-            $DCDiag = dcdiag.exe -a
+            Try {
+                $DCDiag = dcdiag.exe -a 2>&1 | Out-String
+            }
+            Catch {
+                $DCDiag = "DCDiag.exe could not be run on this host: $_"
+            }
         }
 
         it 'DCDiag.exe -a Result' {
-            ($DCDiag | Out-String).Contains('failed') | Should -Be $false
+            $DCDiag.Contains('failed') | Should -Be $false
         }
     }
 
     Context 'Checking the output of RepAdmin /showrepl for replication issues' {
-        It "Replication from <_.'Source DSA'> to <_.'Destination DSA'> has <_.'Number of Failures'> failures" -ForEach (
-            (Repadmin.exe /showrepl * /csv | ConvertFrom-Csv) | Sort-Object 'Source DSA' | Where-Object { $_.'Number of Failures' -ge 0 }
-        ) -AllowNullOrEmptyForEach {
+        # Computed here (Discovery-time), rather than inline in the -ForEach expression below, so that a
+        # missing/failing Repadmin.exe is caught and yields no test items instead of crashing Discovery of
+        # this entire file (which would silently drop every other Describe/Context in the file too).
+        $RepAdminResults = @()
+        Try {
+            $RepAdminResults = (Repadmin.exe /showrepl * /csv | ConvertFrom-Csv) | Sort-Object 'Source DSA' | Where-Object { $_.'Number of Failures' -ge 0 }
+        }
+        Catch {
+            Write-Verbose "Repadmin.exe could not be run on this host: $_"
+        }
+
+        It "Replication from <_.'Source DSA'> to <_.'Destination DSA'> has <_.'Number of Failures'> failures" -ForEach $RepAdminResults -AllowNullOrEmptyForEach {
             $_.'Number of Failures' | Should -Not -BeGreaterThan 0
         }
     }

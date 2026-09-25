@@ -54,11 +54,18 @@ Describe "Test-ActiveDirectory PS$PSVersion" {
         Set-Location $PWDLocation
     }
 
-    It 'Should not throw' {
+    It 'Should not throw and should report no differences when comparing a snapshot against a matching gold config' {
+        # -ExcludeTag ADHC: those checks run real system/AD tools (NLTest, DCDiag, RepAdmin, service and
+        # port probes) which only make sense against a real domain, not a dummy config, and are slow to
+        # time out on a non-AD host -- see ActiveDirectory.Checks.ps1's 'Active Directory health checks'
+        # Describe block.
+        New-DummyADConfig | Export-CliXml "$TestDrive/GoldConfig-dummy.xml"
+        New-DummyADConfig | Export-CliXml "$TestDrive/ADSnapshot-dummy.xml"
+
         {
-            New-DummyADConfig | Export-CliXml "$TestDrive/GoldConfig-dummy.xml"
-            New-DummyADConfig | Export-CliXml "$TestDrive/ADSnapshot-dummy.xml"
-            Test-ActiveDirectory -ADGoldFile "$TestDrive/GoldConfig-dummy.xml" -ADSnapshotFile "$TestDrive/ADSnapshot-dummy.xml"
+            $script:Result = Test-ActiveDirectory -ADGoldFile "$TestDrive/GoldConfig-dummy.xml" -ADSnapshotFile "$TestDrive/ADSnapshot-dummy.xml" -ExcludeTag 'ADHC'
         } | Should -Not -Throw
+
+        $script:Result.FailedCount | Should -Be 0
     }
 }
