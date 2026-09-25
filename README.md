@@ -2,6 +2,9 @@
 
 [![Build Status](https://dev.azure.com/markwragg/GitHub/_apis/build/status/markwragg.Test-ActiveDirectory?branchName=master)](https://dev.azure.com/markwragg/GitHub/_build/latest?definitionId=13&branchName=master) ![coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)
 
+> [!WARNING]
+> As of v3 of this module, it requires **Pester v5 or greater**. If you're on an earlier version of this module and can't upgrade Pester, stay on the v2.x releases.
+
 This project contains a PowerShell module named ADAudit with cmdlets for retrieving and exporting detailed information about the configuration of an Active Directory forest. The module also contains a set of Pester tests that can be used to validate whether any configuration drift has occurred as well as perform a series of health tests of AD.
 
 The validation of AD configuration drifts works by you initially using `Get-ADConfig | Export-ADConfig -AsGoldConfig` to generate a current "known-good state" snapshot of the configuration of AD. After this you can use `Test-ActiveDirectory`, or run the `ActiveDirectory.Checks.ps1` file directly (via `Invoke-Pester`) to compare the known good state to the current AD state (or a previously retrieved snapshot of the state).
