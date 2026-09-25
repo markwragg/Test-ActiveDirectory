@@ -10,9 +10,6 @@ if (-not $env:BHProjectName) {
 if (-not $env:BHModulePath) { $env:BHModulePath = Join-Path $env:BHProjectPath $env:BHProjectName }
 if (-not $env:BHPSModuleManifest) { $env:BHPSModuleManifest = Join-Path $env:BHModulePath "$env:BHProjectName.psd1" }
 
-# Vars
-$changelogPath = Join-Path -Path $env:BHProjectPath -Child 'CHANGELOG.md'
-
 Describe 'Module manifest' {
     Context 'Validation' {
 
@@ -61,7 +58,9 @@ Describe 'Module manifest' {
         # }
 
         $script:changelogVersion = $null
-        It 'Has a valid version in the changelog' -Skip {
+        It 'Has a valid version in the changelog' {
+            $changelogPath = Join-Path -Path $env:BHProjectPath -ChildPath 'CHANGELOG.md'
+
             foreach ($line in (Get-Content $changelogPath)) {
                 if ($line -match "^##\s\[(?<Version>(\d+\.){1,3}\d+)\]") {
                     $script:changelogVersion = $matches.Version
@@ -72,7 +71,7 @@ Describe 'Module manifest' {
             $script:changelogVersion -as [Version] | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has matching changelog and manifest versions' -Skip {
+        It 'Has matching changelog and manifest versions' {
             $script:changelogVersion -as [Version] | Should -Be ( $script:manifest.Version -as [Version] )
         }
 

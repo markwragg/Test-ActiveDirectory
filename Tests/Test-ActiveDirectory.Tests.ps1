@@ -10,7 +10,7 @@ Describe "Test-ActiveDirectory PS$PSVersion" {
         $PWDLocation = Get-Location
 
         # A minimally-shaped stand-in for a Get-ADConfig snapshot, just complete enough that
-        # ActiveDirectory.tests.ps1 can build its (Discovery-time) It names and comparisons
+        # ActiveDirectory.Checks.ps1 can build its (Discovery-time) It names and comparisons
         # without dereferencing missing properties.
         function New-DummyADConfig {
             [pscustomobject]@{

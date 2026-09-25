@@ -29,7 +29,7 @@
         [string]
         $ADGoldFile = (Get-ChildItem (Join-Path $Pwd 'GoldConfig-*.xml') | Select-Object -Last 1).fullname
     )
-    $Container = New-PesterContainer -Path (Join-Path $PSScriptRoot '../ActiveDirectory.tests.ps1') -Data @{
+    $Container = New-PesterContainer -Path (Join-Path $PSScriptRoot '../ActiveDirectory.Checks.ps1') -Data @{
         ADSnapshotFile = $ADSnapshotFile
         ADGoldFile     = $ADGoldFile
     }
