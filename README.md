@@ -1,6 +1,9 @@
 # Test-ActiveDirectory
 
-[![Build Status](https://dev.azure.com/markwragg/GitHub/_apis/build/status/markwragg.Test-ActiveDirectory?branchName=master)](https://dev.azure.com/markwragg/GitHub/_build/latest?definitionId=13&branchName=master) ![coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)
+[![Build Status](https://github.com/markwragg/Test-ActiveDirectory/actions/workflows/build.yml/badge.svg)](https://github.com/markwragg/Test-ActiveDirectory/actions/workflows/build.yml)
+![coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)
+[![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/ADAudit?label=PS%20Gallery)](https://www.powershellgallery.com/packages/ADAudit)
+[![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/ADAudit?color=D3D3D3)](https://www.powershellgallery.com/packages/ADAudit)
 
 > [!WARNING]
 > As of v4 of this module, it requires **Pester v5 or greater**. If you're on an earlier version of this module and can't upgrade Pester, stay on the v2.x releases.
