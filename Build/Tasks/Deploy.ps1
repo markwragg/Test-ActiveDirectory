@@ -1,6 +1,23 @@
 Task 'Deploy' -Depends 'Init' {
     $lines
 
+    # Gate check first: skip entirely (including the version bump below) unless CHANGELOG.md has an
+    # unreleased '## !Deploy' section. Bumping the manifest version here only to find out afterward
+    # that nothing should be published would leave a version-bumped-but-never-released manifest for
+    # the Commit task to check back in.
+    $ChangeLogPath = "$ProjectRoot/CHANGELOG.md"
+    $ChangeLog = if (Test-Path $ChangeLogPath) { Get-Content $ChangeLogPath }
+
+    if (-not $ChangeLog) {
+        Write-Host "$ChangeLogPath not found. Skipping deployment."
+        return
+    }
+
+    if ($ChangeLog -notcontains '## !Deploy') {
+        Write-Host 'CHANGELOG.md did not contain ## !Deploy. Skipping deployment.'
+        return
+    }
+
     # Load the module, read the exported functions, update the psd1 FunctionsToExport
     Set-ModuleFunctions -Name $env:BHPSModuleManifest
 
@@ -15,14 +32,10 @@ Task 'Deploy' -Depends 'Init' {
 
         # A [Breaking] entry in the unreleased ('!Deploy') CHANGELOG section marks this as a breaking release,
         # so bump the major version instead of the usual patch bump Get-NextPSGalleryVersion applies.
-        $ChangeLogPath = "$ProjectRoot/CHANGELOG.md"
-        if (Test-Path $ChangeLogPath) {
-            $ChangeLogContent = Get-Content $ChangeLogPath -Raw
-
-            if ($ChangeLogContent -match '(?s)## !Deploy(.*?)(\n## |\z)' -and $Matches[1] -match '\[Breaking\]') {
-                $Version = [Version]::new($Version.Major + 1, 0, 0)
-                Write-Host "CHANGELOG contains a [Breaking] entry - bumping the major version to $Version instead" -ForegroundColor 'Yellow'
-            }
+        $ChangeLogContent = $ChangeLog -join "`n"
+        if ($ChangeLogContent -match '(?s)## !Deploy(.*?)(\n## |\z)' -and $Matches[1] -match '\[Breaking\]') {
+            $Version = [Version]::new($Version.Major + 1, 0, 0)
+            Write-Host "CHANGELOG contains a [Breaking] entry - bumping the major version to $Version instead" -ForegroundColor 'Yellow'
         }
 
         Update-Metadata -Path $env:BHPSModuleManifest -PropertyName 'ModuleVersion' -Value $Version -ErrorAction 'Stop'
@@ -45,19 +58,6 @@ Task 'Deploy' -Depends 'Init' {
     }
     else {
         Write-Warning "Staging module not found at [$StagingModulePath] -- run the CombineFunctionsAndStage task first. Falling back to publishing directly from source."
-    }
-
-    $ChangeLogPath = "$ProjectRoot/CHANGELOG.md"
-    $ChangeLog = if (Test-Path $ChangeLogPath) { Get-Content $ChangeLogPath }
-
-    if (-not $ChangeLog) {
-        Write-Host "$ChangeLogPath not found. Skipping deployment."
-        return
-    }
-
-    if ($ChangeLog -notcontains '## !Deploy') {
-        Write-Host 'CHANGELOG.md did not contain ## !Deploy. Skipping deployment.'
-        return
     }
 
     $Params = @{
