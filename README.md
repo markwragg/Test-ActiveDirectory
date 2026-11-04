@@ -1,7 +1,7 @@
 # Test-ActiveDirectory
 
 [![Build Status](https://github.com/markwragg/Test-ActiveDirectory/actions/workflows/build.yml/badge.svg)](https://github.com/markwragg/Test-ActiveDirectory/actions/workflows/build.yml)
-![coverage](https://img.shields.io/badge/coverage-80%25-yellow.svg)
+![coverage](https://img.shields.io/badge/coverage-97%25-brightgreen.svg)
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/ADAudit?label=PS%20Gallery)](https://www.powershellgallery.com/packages/ADAudit)
 [![PowerShell Gallery Downloads](https://img.shields.io/powershellgallery/dt/ADAudit?color=D3D3D3)](https://www.powershellgallery.com/packages/ADAudit)
 
