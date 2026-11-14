@@ -109,7 +109,7 @@ PrivateData = @{
         # IconUri = ''
 
         # ReleaseNotes of this module
-        # ReleaseNotes = ''
+        ReleaseNotes = 'https://github.com/markwragg/Test-ActiveDirectory/blob/master/CHANGELOG.md'
 
         # Prerelease string of this module
         # Prerelease = ''
